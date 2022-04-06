@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg width='192px' height='320px'  xmlns='http://www.w3.org/2000/svg' version='1.1' xmlns:xlink='http://www.w3.org/1999/xlink'>
+<rect x='0' y='0' width='192' height='320' rx='0' ry='0' fill='#DADAFF' stroke='none' stroke-width='0px' />
+<circle  cy='64' cx='32' r='96'  stroke='#000080' stroke-width='4px' fill='#0000FF' />
+<ellipse cx='64' cy='160' rx='32' ry='16' fill='#FF0000' stroke='#800000' stroke-width='4px' />
+<line x1='32' y1='192' x2='160' y2='192' stroke='#000000' stroke-width='2px' />
+<rect x='64' y='64' width='32' height='224' rx='4' ry='4' fill='#00FF00' stroke='#008000' stroke-width='4px' />
+</svg>
