@@ -4,12 +4,13 @@ import strings
 import os
 
 struct Svg {
-pub:
-	buffer strings.Builder = strings.new_builder(32768)
 pub mut:
-	height  int
-	width   int
-	content &strings.Builder = 0
+	height   int
+	width    int
+	offset_x int
+	offset_y int
+	buffer   strings.Builder  = strings.new_builder(32768)
+	content  &strings.Builder = 0
 }
 
 [params]
@@ -25,6 +26,13 @@ pub fn svg(p SvgParams) &Svg {
 	}
 	s.content = &s.buffer
 	return s
+}
+
+[unsafe]
+pub fn (r &Svg) free() {
+	unsafe {
+		r.buffer.free()
+	}
 }
 
 pub fn (mut s Svg) resize(w int, h int) {
@@ -56,15 +64,16 @@ pub struct Params {
 }
 
 pub fn (mut s Svg) circle(x int, y int, r int, p Params) {
-	s.content.write_string("<circle  cy='$y' cx='$x' r='$r'  stroke='$p.stroke' stroke-width='${p.strokewidth}px' stroke-linecap='$p.linecap' stroke-linejoin='$p.linejoin' fill='$p.fill' />\n")
+	s.content.write_string("<circle cx='${x + s.offset_x}' cy='${y + s.offset_y}' r='$r'  stroke='$p.stroke' stroke-width='${p.strokewidth}px' stroke-linecap='$p.linecap' stroke-linejoin='$p.linejoin' fill='$p.fill' />\n")
 }
 
 pub fn (mut s Svg) line(x1 int, y1 int, x2 int, y2 int, p Params) {
-	s.content.write_string("<line x1='$x1' y1='$y1' x2='$x2' y2='$y2' stroke='$p.stroke' stroke-width='${p.strokewidth}px' stroke-linecap='$p.linecap' stroke-linejoin='$p.linejoin' />\n")
+	s.content.write_string("<line x1='${x1 + s.offset_x}' y1='${y1 + s.offset_y}' x2='${x2 +
+		s.offset_x}' y2='${y2 + s.offset_y}' stroke='$p.stroke' stroke-width='${p.strokewidth}px' stroke-linecap='$p.linecap' stroke-linejoin='$p.linejoin' />\n")
 }
 
 pub fn (mut s Svg) rectangle(x int, y int, width int, height int, p Params) {
-	s.content.write_string("<rect x='$x' y='$y' width='$width' height='$height' rx='$p.rx' ry='$p.ry' fill='$p.fill' stroke='$p.stroke' stroke-width='${p.strokewidth}px' stroke-linecap='$p.linecap' stroke-linejoin='$p.linejoin' />\n")
+	s.content.write_string("<rect x='${x + s.offset_x}' y='${y + s.offset_y}' width='$width' height='$height' rx='$p.rx' ry='$p.ry' fill='$p.fill' stroke='$p.stroke' stroke-width='${p.strokewidth}px' stroke-linecap='$p.linecap' stroke-linejoin='$p.linejoin' />\n")
 }
 
 pub fn (mut s Svg) fill(fill string) {
@@ -73,11 +82,11 @@ pub fn (mut s Svg) fill(fill string) {
 
 pub fn (mut s Svg) text(x int, y int, text string, fill string, ts TextStyle) {
 	col := if fill !in ['', 'none', 'transparent'] { fill } else { color(ts.color) }
-	s.content.write_string("<text x='$x' y='$y'  fill='$col' font-family='$ts.font_name' font-size='${ts.size}px' dominant-baseline='$ts.vertical_align' text-anchor='$ts.align'><![CDATA[$text]]></text>\n")
+	s.content.write_string("<text x='${x + s.offset_x}' y='${y + s.offset_y}'  fill='$col' font-family='$ts.font_name' font-size='${ts.size}px' dominant-baseline='$ts.vertical_align' text-anchor='$ts.align'><![CDATA[$text]]></text>\n")
 }
 
 pub fn (mut s Svg) ellipse(x int, y int, rx int, ry int, p Params) {
-	s.content.write_string("<ellipse cx='$x' cy='$y' rx='$rx' ry='$ry' fill='$p.fill' stroke='$p.stroke' stroke-width='${p.strokewidth}px' stroke-linecap='$p.linecap' stroke-linejoin='$p.linejoin' />\n")
+	s.content.write_string("<ellipse cx='${x + s.offset_x}' cy='${y + s.offset_y}' rx='$rx' ry='$ry' fill='$p.fill' stroke='$p.stroke' stroke-width='${p.strokewidth}px' stroke-linecap='$p.linecap' stroke-linejoin='$p.linejoin' />\n")
 }
 
 pub fn (mut s Svg) polygon(points string, p Params) {
@@ -93,5 +102,5 @@ pub fn (mut s Svg) path(d string, p Params) {
 }
 
 pub fn (mut s Svg) image(x int, y int, width int, height int, path string) {
-	s.content.write_string("<image xlink:href='$path' x='$x' y='$y' height='$height' width='$width' />\n")
+	s.content.write_string("<image xlink:href='$path' x='${x + s.offset_x}' y='${y + s.offset_y}' height='$height' width='$width' />\n")
 }
