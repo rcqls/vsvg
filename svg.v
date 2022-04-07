@@ -51,18 +51,20 @@ pub struct Params {
 	fill        string = 'none'
 	rx          int
 	ry          int
+	linecap string = "butt" 
+	linejoin string = "bevel"
 }
 
 pub fn (mut s Svg) circle(x int, y int, r int, p Params) {
-	s.content.write_string("<circle  cy='$y' cx='$x' r='$r'  stroke='$p.stroke' stroke-width='${p.strokewidth}px' fill='$p.fill' />\n")
+	s.content.write_string("<circle  cy='$y' cx='$x' r='$r'  stroke='$p.stroke' stroke-width='${p.strokewidth}px' stroke-linecap='${p.linecap}' stroke-linejoin='${p.linejoin}' fill='$p.fill' />\n")
 }
 
 pub fn (mut s Svg) line(x1 int, y1 int, x2 int, y2 int, p Params) {
-	s.content.write_string("<line x1='$x1' y1='$y1' x2='$x2' y2='$y2' stroke='$p.stroke' stroke-width='${p.strokewidth}px' />\n")
+	s.content.write_string("<line x1='$x1' y1='$y1' x2='$x2' y2='$y2' stroke='$p.stroke' stroke-width='${p.strokewidth}px' stroke-linecap='${p.linecap}' stroke-linejoin='${p.linejoin}' />\n")
 }
 
 pub fn (mut s Svg) rectangle(x int, y int, width int, height int, p Params) {
-	s.content.write_string("<rect x='$x' y='$y' width='$width' height='$height' rx='$p.rx' ry='$p.ry' fill='$p.fill' stroke='$p.stroke' stroke-width='${p.strokewidth}px' />\n")
+	s.content.write_string("<rect x='$x' y='$y' width='$width' height='$height' rx='$p.rx' ry='$p.ry' fill='$p.fill' stroke='$p.stroke' stroke-width='${p.strokewidth}px' stroke-linecap='${p.linecap}' stroke-linejoin='${p.linejoin}' />\n")
 }
 
 pub fn (mut s Svg) fill(fill string) {
@@ -74,15 +76,19 @@ pub fn (mut s Svg) text(x int, y int, text string, fill string, ts TextStyle) {
 }
 
 pub fn (mut s Svg) ellipse(x int, y int, rx int, ry int, p Params) {
-	s.content.write_string("<ellipse cx='$x' cy='$y' rx='$rx' ry='$ry' fill='$p.fill' stroke='$p.stroke' stroke-width='${p.strokewidth}px' />\n")
+	s.content.write_string("<ellipse cx='$x' cy='$y' rx='$rx' ry='$ry' fill='$p.fill' stroke='$p.stroke' stroke-width='${p.strokewidth}px' stroke-linecap='${p.linecap}' stroke-linejoin='${p.linejoin}' />\n")
 }
 
 pub fn (mut s Svg) polygon(points string, p Params) {
-	s.content.write_string("<polygon points='$points' fill='$p.fill' stroke='$p.stroke' stroke-width='${p.strokewidth}px' />\n")
+	s.content.write_string("<polygon points='$points' fill='$p.fill' stroke='$p.stroke' stroke-width='${p.strokewidth}px' stroke-linecap='${p.linecap}' stroke-linejoin='${p.linejoin}' />\n")
 }
 
 pub fn (mut s Svg) polyline(points string, p Params) {
-	s.content.write_string("<polyline points='$points' fill='$p.fill' stroke='$p.stroke' stroke-width='${p.strokewidth}px' />\n")
+	s.content.write_string("<polyline points='$points' fill='$p.fill' stroke='$p.stroke' stroke-width='${p.strokewidth}px' stroke-linecap='${p.linecap}' stroke-linejoin='${p.linejoin}' />\n")
+}
+
+pub fn (mut s Svg) path(d string, p Params) {
+	s.content.write_string("<path d='$d' fill='$p.fill' stroke='$p.stroke' stroke-width='${p.strokewidth}px' stroke-linecap='${p.linecap}' stroke-linejoin='${p.linejoin}' />\n")
 }
 
 pub fn (mut s Svg) image(x int, y int, width int, height int, path string) {
